@@ -1,1 +1,101 @@
+Q.1: String to integer atoi
+Code:
+class Solution {
+    public int myAtoi(String str) {
+        int result = 0;
+        int index = 0;
+        int signMultiplier = 1;
+        int upperLimit = Integer.MAX_VALUE;
+        int lowerLimit = Integer.MIN_VALUE;
+        
+        if (str.length() == 0) {
+            return 0;
+        }
+        
+        while (index < str.length() && str.charAt(index) == ' ') {
+            index++;
+        }
+        
+        if (index < str.length() && (str.charAt(index) == '-' || str.charAt(index) == '+')) {
+            if (str.charAt(index) == '-') {
+                signMultiplier = -1;
+            }
+            index++;
+        }
+        
+        while (index < str.length() && str.charAt(index) - '0' <= 9 && str.charAt(index) - '0' >= 0) {
+            int currentDigit = str.charAt(index) - '0';
+            if (result > upperLimit / 10 || (result == upperLimit / 10 && currentDigit > upperLimit % 10)) {
+                return (signMultiplier == 1) ? upperLimit : lowerLimit;
+            }
+            result = result * 10 + currentDigit;
+            index++;
+        }
+        
+        return result * signMultiplier;
+    }
+}
 
+Q.2: Find All Anagrams in a String
+Code:
+class Solution {
+    public List<Integer> findAnagrams(String text, String pattern) {
+        int textLength = text.length();
+        int patternLength = pattern.length();
+        if (textLength < patternLength) return new ArrayList<>();
+        
+        Map<Character, Integer> patternFrequency = new HashMap<>();
+        Map<Character, Integer> windowFrequency = new HashMap<>();
+        List<Integer> resultIndices = new ArrayList<>();
+        
+        for (char character : pattern.toCharArray()) {
+            patternFrequency.put(character, patternFrequency.getOrDefault(character, 0) + 1);
+        }
+        
+        for (int index = 0; index < textLength; index++) {
+            char currentChar = text.charAt(index);
+            windowFrequency.put(currentChar, windowFrequency.getOrDefault(currentChar, 0) + 1);
+            
+            if (index >= patternLength) {
+                char outdatedChar = text.charAt(index - patternLength);
+                if (windowFrequency.get(outdatedChar) == 1) {
+                    windowFrequency.remove(outdatedChar);
+                } else {
+                    windowFrequency.put(outdatedChar, windowFrequency.get(outdatedChar) - 1);
+                }
+            }
+            
+            if (windowFrequency.equals(patternFrequency)) {
+                resultIndices.add(index - patternLength + 1);
+            }
+        }
+        
+        return resultIndices;
+    }
+}
+
+Q.3: Reverse Words in a String
+Code:
+class Solution {
+    public String reverseWords(String inputString) {
+        StringBuilder result = new StringBuilder();
+        int length = inputString.length();
+        int startIndex = length - 1; // starting index
+        
+        while (startIndex >= 0) {
+            while (startIndex >= 0 && inputString.charAt(startIndex) == ' ') startIndex--;
+            if (startIndex < 0) break;
+            int endIndex = startIndex; // ending index
+            while (startIndex >= 0 && inputString.charAt(startIndex) != ' ') startIndex--;
+            
+            if (result.length() == 0) {
+                result.append(inputString.substring(startIndex + 1, endIndex + 1));
+            } else {
+                result.append(' ');
+                result.append(inputString.substring(startIndex + 1, endIndex + 1));
+            }
+        }
+        
+        return result.toString();
+    }
+}
