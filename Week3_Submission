@@ -1,1 +1,124 @@
+1. Palindrome Linked List
+Code:
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+        ListNode temp = head;
+        
+        int length = 0;
+        
+        while (temp != null) {
+            temp = temp.next;
+            length++;
+        }
+
+        ListNode leftPart = null;
+        ListNode rightPart = null;
+        ListNode previous = null;
+
+        for (int i = 1; i <= length / 2; i++) {
+            rightPart = head.next;
+            head.next = previous;
+            previous = head;
+            leftPart = head;
+            head = rightPart;
+
+            if (i == length / 2 && length % 2 == 1) {
+                rightPart = rightPart.next;
+            }
+        }
+
+        while (leftPart != null) {
+            if (leftPart.val != rightPart.val) {
+                return false;
+            }
+            leftPart = leftPart.next;
+            rightPart = rightPart.next;
+        }
+
+        return true; 
+    }
+}
+
+2. Reorder List
+Code:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode mid(ListNode node) {
+        ListNode tortoise = node;
+        ListNode hare = node;
+        while(hare != null && hare.next != null){
+            hare = hare.next.next;
+            tortoise = tortoise.next;
+        }
+        return tortoise;
+    }
+
+    public ListNode rev(ListNode node) {
+        ListNode current = node; 
+        ListNode previous = null;
+        ListNode nextNode = null;
+        while(current != null){
+            nextNode = current.next;
+            current.next = previous;
+            previous = current;
+            current = nextNode;
+        }
+        return previous;
+    }
+
+    public void reorderList(ListNode listHead) {
+        ListNode middle = mid(listHead);
+        ListNode secondHalfStart = middle.next;
+        middle.next = null;
+        ListNode reversedSecondHalf = rev(secondHalfStart);
+        ListNode firstHalf = listHead;
+
+        ListNode tempNode;
+
+        while(firstHalf != null && reversedSecondHalf != null){
+            tempNode = firstHalf.next;
+            firstHalf.next = reversedSecondHalf;
+            
+            firstHalf = reversedSecondHalf;
+            reversedSecondHalf = tempNode;
+        }
+    }
+}
+
+3. Set Matrix Zeroes
+Code:
+class Solution {
+    public void setZeroes(int[][] matrix) {
+        int rowCount = matrix.length;
+        int colCount = matrix[0].length;
+        boolean[] zeroRow = new boolean[rowCount];
+        boolean[] zeroCol = new boolean[colCount];
+        
+        for (int row = 0; row < rowCount; row++) {
+            for (int col = 0; col < colCount; col++) {
+                if (matrix[row][col] == 0) {
+                    zeroRow[row] = true;  // Mark row
+                    zeroCol[col] = true;  // Mark column
+                }
+            }
+        }
+        
+        for (int row = 0; row < rowCount; row++) {
+            for (int col = 0; col < colCount; col++) {
+                if (zeroRow[row] || zeroCol[col]) {
+                    matrix[row][col] = 0;
+                }
+            }
+        }
+    }
+}
 
