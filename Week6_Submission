@@ -1,0 +1,37 @@
+1. Lowest Common Ancestor of a Binary Tree
+Code:
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode node, TreeNode nodeA, TreeNode nodeB) {
+        if (node == null) return null;
+        if (node == nodeA || node == nodeB) return node;
+
+        TreeNode leftSearch = lowestCommonAncestor(node.left, nodeA, nodeB);
+        TreeNode rightSearch = lowestCommonAncestor(node.right, nodeA, nodeB);
+
+        if (leftSearch != null && rightSearch != null) return node;
+        return leftSearch == null ? rightSearch : leftSearch;
+    }
+}
+
+2. Top K Frequent Elements
+Code:
+class Solution {
+    public int[] topKFrequent(int[] inputArray, int topK) {
+
+        Map<Integer, Integer> frequencyMap = new HashMap<>();
+        for (int num : inputArray) {
+            frequencyMap.put(num, frequencyMap.getOrDefault(num, 0) + 1);
+        }
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(
+            (x, y) -> frequencyMap.get(y) - frequencyMap.get(x)
+        );
+        maxHeap.addAll(frequencyMap.keySet());
+
+        int[] result = new int[topK];
+        for (int i = 0; i < topK; i++) {
+            result[i] = maxHeap.poll();
+        }
+
+        return result;
+    }
+}
